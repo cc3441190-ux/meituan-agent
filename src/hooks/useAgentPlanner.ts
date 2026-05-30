@@ -21,6 +21,7 @@ import {
   syncNodeFromTicketCheck,
 } from '../agent/planGuards'
 import { requiresSeatCheck, requiresTicketCheck } from '../agent/nodeAvailability'
+import { getRouteSync } from '../agent/routeUtils'
 import { applyNodeTimePatch, nudgeNodeArrival } from '../agent/planTimeAdjust'
 import { schedulePlanTimeline } from '../agent/timeline'
 import { TaskRunner } from '../agent/taskRunner'
@@ -110,7 +111,9 @@ export function useAgentPlanner() {
 
   const appendLog = useCallback((msg: string) => {
     const time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
-    setLogs((prev) => [...prev, `[${time}] ${msg}`])
+    const line = `[${time}] ${msg}`
+    setLogs((prev) => [...prev, line])
+    console.log('[Agent]', line)
   }, [])
 
   const updatePlan = useCallback((plan: Plan) => {
@@ -314,9 +317,9 @@ export function useAgentPlanner() {
 
         const prev = plan.nodes[idx - 1]
         if (prev?.poi && node.poi) {
-          node.transit = poi.getRoute(prev.poi.location, node.poi.location)
+          node.transit = await poi.getRoute(prev.poi.location, node.poi.location)
         }
-        schedulePlanTimeline(plan, (from, to) => poi.getRoute(from, to))
+        schedulePlanTimeline(plan, getRouteSync)
 
         appendLog(
           `用户操作: 更换为 ${newPoi.name}${node.inventory?.available === false ? '（该时段仍紧张）' : ''}`,
@@ -373,8 +376,8 @@ export function useAgentPlanner() {
   )
 
   const getRouteResolver = useCallback(
-    (from: [number, number], to: [number, number]) => poi.getRoute(from, to),
-    [poi],
+    (from: [number, number], to: [number, number]) => getRouteSync(from, to),
+    [],
   )
 
   const openTimeAdjust = useCallback(
@@ -453,7 +456,7 @@ export function useAgentPlanner() {
         clonePlan(currentPlan),
         afterIndex,
         draft,
-        (from, to) => poi.getRoute(from, to),
+        (from, to) => getRouteSync(from, to),
       )
 
       for (let i = Math.max(0, afterIndex); i <= insertAt + 1 && i < plan.nodes.length; i++) {
@@ -994,7 +997,7 @@ export function useAgentPlanner() {
           const prev = plan.nodes[nodeIndex - 1]
           if (prev && !prev.fixed) prev.duration = Math.max(15, prev.duration + delay)
         }
-        schedulePlanTimeline(plan, (from, to) => poi.getRoute(from, to))
+        schedulePlanTimeline(plan, getRouteSync)
         delete node.conflict
         node.status = 'active'
         appendLog(`行程冲突: 已顺延 ${delay} 分钟`)
@@ -1009,7 +1012,7 @@ export function useAgentPlanner() {
         delete node.conflict
         node.status = 'active'
         if (node.transit) node.transit = { ...node.transit, duration: Math.max(8, node.transit.duration - 6) }
-        schedulePlanTimeline(plan, (from, to) => poi.getRoute(from, to))
+        schedulePlanTimeline(plan, getRouteSync)
         updatePlan(plan)
         setActionToast('已代叫车，预计缩短 6 分钟路程')
       }

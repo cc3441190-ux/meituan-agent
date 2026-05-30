@@ -43,16 +43,16 @@ export class HttpPOIService implements IPOIService {
     }
   }
 
-  getRoute(
+  async getRoute(
     from: [number, number],
     to: [number, number],
     mode?: 'drive' | 'walk' | 'subway',
-  ): Route {
+  ): Promise<Route> {
     void mode
     const dx = from[0] - to[0]
     const dy = from[1] - to[1]
     const distKm = Math.sqrt(dx * dx + dy * dy) * 100
     const duration = Math.max(8, Math.ceil((distKm / 30) * 60))
-    return { distance: distKm.toFixed(1), duration, mode: 'drive' }
+    return Promise.resolve({ distance: distKm.toFixed(1), duration, mode: 'drive' })
   }
 }

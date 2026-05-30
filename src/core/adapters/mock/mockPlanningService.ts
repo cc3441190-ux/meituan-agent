@@ -69,7 +69,7 @@ export class MockPlanningService implements IPlanningService {
       if (i > 0) {
         const prev = skeleton.nodes[i - 1]
         if (prev.poi && node.poi) {
-          node.transit = this.agent.poiService.getRoute(prev.poi.location, node.poi.location)
+          node.transit = await this.agent.poiService.getRoute(prev.poi.location, node.poi.location)
         }
       }
     }

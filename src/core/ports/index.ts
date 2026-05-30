@@ -1,5 +1,7 @@
 import type { Deliverable } from '../../agent/deliverables'
-import type { Constraints, Inventory, Plan, POI, Route } from '../../agent/types'
+import type { Constraints, InventoryResult, Plan, POI, Route } from '../../agent/types'
+
+export type { InventoryResult }
 
 /** 规划服务：自然语言 → 可执行行程（接入 LLM / 美团规划 API 时替换实现） */
 export interface IPlanningService {
@@ -27,9 +29,13 @@ export interface IVoiceService {
 export interface IPOIService {
   readonly mode: 'mock' | 'live'
   searchPOI(type: string, constraints: Constraints): Promise<POI>
-  checkInventory(poiId: string, timeSlot?: Date): Promise<Inventory>
-  checkTicketAvailability(poiId: string, timeSlot?: Date): Promise<Inventory>
-  getRoute(from: [number, number], to: [number, number], mode?: 'drive' | 'walk' | 'subway'): Route
+  checkInventory(poiId: string, timeSlot?: Date): Promise<InventoryResult>
+  checkTicketAvailability(poiId: string, timeSlot?: Date): Promise<InventoryResult>
+  getRoute(
+    from: [number, number],
+    to: [number, number],
+    mode?: 'drive' | 'walk' | 'subway',
+  ): Promise<Route>
 }
 
 /** 预订服务：下单 / 取消（接入美团预订 API 时替换实现） */

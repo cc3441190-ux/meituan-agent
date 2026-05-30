@@ -6,6 +6,7 @@ import {
   resolvePlanStartTime,
 } from './intentRules'
 import { availabilityConflictType, requiresTicketCheck } from './nodeAvailability'
+import { getRouteSync } from './routeUtils'
 import { syncNodeFromInventoryCheck, syncNodeFromTicketCheck } from './planGuards'
 import { enforceTimeWindow, schedulePlanTimeline } from './timeline'
 import type { Constraints, Plan, PlanNode } from './types'
@@ -232,7 +233,7 @@ export class LocalPlannerAgent {
       }
 
       if (prev.poi && curr.poi) {
-        const route = this.poiService.getRoute(prev.poi.location, curr.poi.location)
+        const route = getRouteSync(prev.poi.location, curr.poi.location)
         const transitTime = route.duration
         const availableGap = ((curr.startTime?.getTime() ?? 0) - (prev.endTime?.getTime() ?? 0)) / 60000
 
@@ -314,9 +315,7 @@ export class LocalPlannerAgent {
 
   recalcTimes(plan: Plan, _startIdx = 0) {
     void _startIdx
-    schedulePlanTimeline(plan, (from, to) =>
-      this.poiService.getRoute(from, to),
-    )
+    schedulePlanTimeline(plan, getRouteSync)
   }
 
   detectConflictsInRange(plan: Plan, from: number, to: number) {
@@ -332,11 +331,11 @@ export class LocalPlannerAgent {
   }
 
   finalizePlan(plan: Plan, constraints: Constraints): void {
-    schedulePlanTimeline(plan, (from, to) => this.poiService.getRoute(from, to))
+    schedulePlanTimeline(plan, getRouteSync)
     const { overflowMinutes } = enforceTimeWindow(
       plan,
       constraints.timeWindow,
-      (from, to) => this.poiService.getRoute(from, to),
+      getRouteSync,
     )
     if (overflowMinutes > 0) {
       this.log(`TimeGuard: 压缩后仍超出时间窗 ${overflowMinutes} 分钟，已标注`)

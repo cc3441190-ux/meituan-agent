@@ -14,6 +14,9 @@ export interface Inventory {
   reason?: string
 }
 
+/** 与交付清单对齐的库存/门票查询结果别名 */
+export type InventoryResult = Inventory
+
 export interface Route {
   distance: string
   duration: number

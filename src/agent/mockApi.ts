@@ -76,6 +76,27 @@ function parseExcludeIds(exclude?: string): Set<string> {
   )
 }
 
+function computeRoute(
+  from: [number, number],
+  to: [number, number],
+  mode?: 'drive' | 'walk' | 'subway',
+): Route {
+  const dx = from[0] - to[0]
+  const dy = from[1] - to[1]
+  const distKm = Math.sqrt(dx * dx + dy * dy) * 100
+
+  let resolved = mode
+  if (!resolved) {
+    if (distKm < 1.2) resolved = 'walk'
+    else if (distKm > 5) resolved = 'subway'
+    else resolved = 'drive'
+  }
+
+  const speed = { walk: 5, drive: 30, subway: 40 }[resolved]
+  const duration = Math.max(resolved === 'walk' ? 5 : 8, Math.ceil((distKm / speed) * 60))
+  return { distance: distKm.toFixed(1), duration, mode: resolved }
+}
+
 export const MockAPI = {
   async searchPOI(type: string, constraints: Constraints): Promise<POI> {
     const list = POI_DB[type] ?? POI_DB.cafe
@@ -135,25 +156,21 @@ export const MockAPI = {
     return { available: true, queue: 0 }
   },
 
-  getRoute(
+  async getRoute(
+    from: [number, number],
+    to: [number, number],
+    mode?: 'drive' | 'walk' | 'subway',
+  ): Promise<Route> {
+    return Promise.resolve(computeRoute(from, to, mode))
+  },
+
+  /** 同步路由计算（供 schedulePlanTimeline 等本地重算使用） */
+  getRouteSync(
     from: [number, number],
     to: [number, number],
     mode?: 'drive' | 'walk' | 'subway',
   ): Route {
-    const dx = from[0] - to[0]
-    const dy = from[1] - to[1]
-    const distKm = Math.sqrt(dx * dx + dy * dy) * 100
-
-    let resolved = mode
-    if (!resolved) {
-      if (distKm < 1.2) resolved = 'walk'
-      else if (distKm > 5) resolved = 'subway'
-      else resolved = 'drive'
-    }
-
-    const speed = { walk: 5, drive: 30, subway: 40 }[resolved]
-    const duration = Math.max(resolved === 'walk' ? 5 : 8, Math.ceil((distKm / speed) * 60))
-    return { distance: distKm.toFixed(1), duration, mode: resolved }
+    return computeRoute(from, to, mode)
   },
 
   async bookPOI(_poiId: string, _timeSlot?: Date) {

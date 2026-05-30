@@ -1,4 +1,4 @@
-import type { Constraints, Route } from '../../../agent/types'
+import type { Constraints } from '../../../agent/types'
 import type { IPOIService } from '../../ports'
 import { MockAPI } from '../../../agent/mockApi'
 
@@ -18,7 +18,7 @@ export class MockPOIService implements IPOIService {
     return MockAPI.checkTicketAvailability(poiId, timeSlot)
   }
 
-  getRoute(from: [number, number], to: [number, number], mode?: 'drive' | 'walk' | 'subway'): Route {
+  getRoute(from: [number, number], to: [number, number], mode?: 'drive' | 'walk' | 'subway') {
     return MockAPI.getRoute(from, to, mode)
   }
 }
