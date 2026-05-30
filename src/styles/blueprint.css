@@ -1,0 +1,235 @@
+/* V5.0 克制配色：鼠尾草绿 + 琥珀金为锚点 */
+.planner-root {
+  --v5-red: #b85c4a;
+  --v5-blue: #6b8fa8;
+  --v5-sage: #87a382;
+  --v5-amber: #f9d8b1;
+  --cream-paper: #f7f2e8;
+}
+
+.planner-root .phone {
+  background-color: var(--cream-paper);
+}
+
+.planner-root .header {
+  background: linear-gradient(to bottom, rgba(247, 242, 232, 0.88) 65%, transparent);
+  padding-bottom: 6px;
+}
+
+.planner-root .header-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.planner-root .header-share-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff8ee 0%, var(--v5-amber) 100%);
+  box-shadow: 0 2px 8px rgba(200, 150, 90, 0.2);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.planner-root .header-share-icon:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.planner-root .header-share-icon:disabled {
+  opacity: 0.55;
+}
+
+/* 顶部极简玻璃摘要 · 最多两行 */
+.planner-root .agent-summary-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 12px rgba(120, 130, 120, 0.06);
+}
+
+.planner-root .agent-summary-strip-text {
+  flex: 1;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: #5a6560;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.planner-root .agent-summary-share-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fff8ee 0%, var(--v5-amber) 100%);
+  box-shadow: 0 2px 6px rgba(200, 150, 90, 0.18);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.planner-root .scenario-chip {
+  font-size: 10px;
+  color: #95a5a6;
+  margin-top: 2px;
+}
+
+.planner-root .weather-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.planner-root .weather {
+  font-size: 12px;
+  color: #636e72;
+  background: rgba(255, 255, 255, 0.65);
+  padding: 5px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.planner-root .weather-veto {
+  font-size: 8px;
+  font-weight: 600;
+  color: #9a6b3a;
+  padding: 3px 7px;
+  border-radius: 8px;
+  background: rgba(255, 236, 210, 0.92);
+  border: 1px solid rgba(249, 216, 177, 0.6);
+  max-width: 96px;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* 3D 黏土地图 · 回归视频/底图道路，不用 2D 矢量贴图 */
+.planner-root .map-bg-image {
+  opacity: 1;
+  mix-blend-mode: normal;
+  filter: saturate(1.02);
+}
+
+.planner-root .map-road-video {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+/* 新背景已含完整黏土路，视频仅作轻微增强，不遮挡底图 */
+.planner-root .map-road-video.is-playing {
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+}
+
+.planner-root .map-bg-layer--road-active .map-bg-image {
+  opacity: 1;
+}
+
+/* 黏土节点 */
+.planner-root .sign-wood {
+  background: linear-gradient(155deg, #fffaf4 0%, #f2e6d6 45%, #e6d4c0 100%);
+  border: 1px solid rgba(200, 175, 145, 0.55);
+  box-shadow:
+    0 5px 14px rgba(100, 80, 55, 0.1),
+    inset 0 2px 5px rgba(255, 255, 255, 0.65),
+    inset 0 -3px 6px rgba(170, 140, 105, 0.12);
+}
+
+.planner-root .node--pending .sign-wood {
+  border: 1px dashed rgba(249, 216, 177, 0.85);
+  background: rgba(255, 252, 245, 0.72);
+}
+
+.planner-root .node--confirmed .sign-wood {
+  border: 1px solid rgba(135, 163, 130, 0.45);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.planner-root .node-time--pending {
+  background: rgba(249, 216, 177, 0.4);
+  color: #8f6a40;
+}
+
+.planner-root .node-map-chip--green {
+  color: #4a6b45;
+}
+
+.planner-root .node-map-chip--yellow {
+  color: #6b7d6a;
+}
+
+.planner-root .transit-connector {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(135, 163, 130, 0.35) 0 6px,
+    transparent 6px 10px
+  );
+  height: 2px;
+  opacity: 0.5;
+}
+
+.planner-root .transit-clasp-card {
+  border-color: rgba(249, 216, 177, 0.7);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.planner-root .transit-clasp-route {
+  color: #6b7d68;
+}
+
+.planner-root .detail-agent-voice {
+  border-color: rgba(135, 163, 130, 0.35);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.planner-root .detail-agent-voice-label {
+  color: var(--v5-sage);
+}
+
+.planner-root .tag.green {
+  background: rgba(232, 244, 230, 0.85);
+  color: #4a6b45;
+  border: 1px solid rgba(135, 163, 130, 0.3);
+}
+
+.planner-root .inventory-badge--yellow {
+  color: #6b7d6a;
+  background: rgba(238, 245, 235, 0.9);
+}
+
+.planner-root .detail-status-banner {
+  color: #8f5a24;
+  background: rgba(255, 236, 210, 0.5);
+  border-color: rgba(249, 216, 177, 0.6);
+}
+
+.planner-root .detail-panel,
+.planner-root .share-invite-sheet {
+  background-color: var(--cream-paper);
+}
+
+.planner-root .node-wireframe-icon {
+  color: var(--v5-sage);
+}
