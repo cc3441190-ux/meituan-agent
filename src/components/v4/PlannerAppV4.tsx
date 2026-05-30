@@ -484,6 +484,11 @@ export function PlannerAppV4() {
   return (
     <div className="planner-root v4-root">
       <div className={`v4-phone ${mapFullscreen ? 'v4-phone--map-open' : ''}`}>
+        {!intentSubmitted && (
+          <a href="/" className="v4-site-link">
+            官网
+          </a>
+        )}
         {intentSubmitted && (
           <button className="v4-universal-back" type="button" onClick={handleBack}>
             <span className="v4-universal-back-icon" aria-hidden>

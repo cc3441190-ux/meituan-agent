@@ -3872,3 +3872,33 @@ button.v4-time-adjust-preset--active {
   border-color: transparent;
   box-shadow: 0 4px 10px rgba(61, 158, 84, 0.22);
 }
+
+/* Demo 页 · 返回官网 */
+.v4-site-link {
+  position: absolute;
+  z-index: 260;
+  top: 12px;
+  right: 20px;
+  min-height: 34px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--v4-border);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--v4-sub);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.v4-site-link:hover {
+  background: var(--v4-orange-dim);
+  color: var(--v4-orange-dark);
+  border-color: rgba(255, 107, 53, 0.22);
+}
