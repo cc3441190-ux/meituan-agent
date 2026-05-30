@@ -11,6 +11,7 @@ import {
   formStateToConstraints,
   type IntentFormState,
 } from '../../v4/intentConstraintForm'
+import { COMPETITION_SCENARIOS } from '../../config/scenarios'
 import { IntentUnderstandingFields } from './IntentUnderstandingFields'
 import { MockKeyboard } from './MockKeyboard'
 
@@ -19,12 +20,7 @@ type IntentInputScreenProps = {
   onGenerate: (prompt: string, constraints?: Constraints) => void
 }
 
-const examplePrompts = [
-  '今天下午想和老婆、5岁的儿子一起出去玩，帮我规划一个轻松点的路线',
-  '周末想安排一次亲子一日游，别太累，最好有室内备选',
-  '今晚想和女朋友约会，预算不要太高，想有点氛围感',
-  '下雨天想带老人和孩子出门，帮我找舒服一点的安排',
-]
+const examplePrompts = COMPETITION_SCENARIOS.filter((s) => s.enabled).map((s) => s.prompt)
 
 export function IntentInputScreen({ isPlanning, onGenerate }: IntentInputScreenProps) {
   const services = usePlannerServices()
@@ -252,7 +248,7 @@ export function IntentInputScreen({ isPlanning, onGenerate }: IntentInputScreenP
         <section className="v4-intent-examples">
           <p>不知道怎么说？试试这些</p>
           <div>
-            {examplePrompts.slice(1).map((prompt) => (
+            {examplePrompts.map((prompt) => (
               <button key={prompt} type="button" onClick={() => setText(prompt)}>
                 {prompt}
               </button>

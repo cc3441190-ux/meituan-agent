@@ -20,9 +20,11 @@ const agent = new LocalPlannerAgent(poi)
 const share = new MockShareService()
 const booking = new MockBookingService()
 
+import { COMPETITION_SCENARIOS } from '../src/config/scenarios.ts'
+
 const cases = [
-  { name: '家庭', input: '今天下午想和老婆、5岁的孩子出去玩，老婆最近在减肥，别离家太远' },
-  { name: '朋友', input: '4个朋友下午想出去玩，2个男生2个女生，人均200以内，别太远' },
+  { name: '家庭', input: COMPETITION_SCENARIOS[0].prompt },
+  { name: '朋友', input: COMPETITION_SCENARIOS[1].prompt },
   { name: '预算', input: '便宜点，人均200，别太贵' },
   { name: '模糊', input: '随便' },
 ]

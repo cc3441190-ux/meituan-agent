@@ -1,5 +1,5 @@
-import '../../styles/landing.css'
 import { COMPETITION_SCENARIOS } from '../../config/scenarios'
+import '../../styles/landing.css'
 
 const GITHUB_URL = 'https://github.com/cc3441190-ux/meituan-agent'
 
@@ -8,7 +8,7 @@ const FEATURES = [
     icon: '💬',
     tone: 'orange' as const,
     title: '一句话理解意图',
-    desc: '自然语言描述下午想做什么，Agent 自动解析人数、预算、时段与偏好，无需填表。',
+    desc: '自然语言说出你想怎么安排，Agent 自动解析人数、预算、时段与偏好，无需填表。',
   },
   {
     icon: '🗺️',
@@ -45,7 +45,7 @@ const FEATURES = [
 const STEPS = [
   {
     title: '说出想法',
-    desc: '用口语描述下午安排，例如「带孩子和老婆出门玩几个小时，别太远」。',
+    desc: '用口语描述出行安排，例如「带孩子和老婆出门玩一天，别太远」。',
   },
   {
     title: 'AI 理解并规划',
@@ -92,7 +92,7 @@ export function LandingPage() {
           <h1>
             一句话出发，
             <br />
-            <em>帮你把下午安排做完</em>
+            <em>帮你把出行安排做完</em>
           </h1>
           <p className="landing-hero-lead">
             不是搜索推荐列表，而是可执行的出行 Agent：理解你的目标，规划玩·吃·额外活动，
@@ -135,10 +135,10 @@ export function LandingPage() {
             </div>
             <div className="landing-phone-body">
               <div className="landing-mock-bubble">
-                今天下午想带孩子和老婆出去玩，别太远，老婆在减肥…
+                周末想带孩子和老婆出门玩一天，别太远，老婆在减肥…
               </div>
               <div className="landing-mock-card">
-                <div className="landing-mock-card-title">下午方案 · 已理解</div>
+                <div className="landing-mock-card-title">出行方案 · 已理解</div>
                 <div className="landing-mock-row">
                   <span className="landing-mock-time">14:00</span>
                   <span>城市绿谷亲子乐园 · 步行 12 分钟</span>

@@ -68,6 +68,9 @@ export class LocalPlannerAgent {
     if (input.includes('下午') || input.includes('半天')) constraints.timeWindow = 4
     if (input.includes('晚上') || input.includes('夜')) constraints.timeWindow = 3
     if (input.includes('一整天') || input.includes('一天')) constraints.timeWindow = 8
+    if (/几个\s*小时|几个小时/.test(input)) {
+      constraints.timeWindow = Math.max(constraints.timeWindow, 4)
+    }
     const hourMatch = input.match(/(\d+)\s*小时/)
     if (hourMatch) {
       const h = parseInt(hourMatch[1], 10)
@@ -176,8 +179,16 @@ export class LocalPlannerAgent {
         category: 'dining',
         duration: 60,
       })
-      if (constraints.timeWindow >= 5) {
-        nodes.push({ type: 'garden', name: '植物园/散步', category: 'outdoor', duration: 60 })
+      const wantsExtraActivity =
+        /还有什么|还可以|还能|再做/.test(rawInput) ||
+        /去哪玩.*去哪吃/.test(rawInput.replace(/\s/g, ''))
+      if (wantsExtraActivity || constraints.timeWindow >= 5) {
+        nodes.push({
+          type: 'garden',
+          name: '散步/植物园',
+          category: 'outdoor',
+          duration: wantsExtraActivity ? 45 : 60,
+        })
       }
     } else if (constraints.people.includes('friends')) {
       const wantsArcade = /电玩|桌游|密室|ktv/i.test(rawInput)
@@ -193,7 +204,10 @@ export class LocalPlannerAgent {
       // 低预算 → 避开高消费烧烤，改普通聚餐
       const diningType = isLowBudget ? 'family_restaurant' : 'bbq'
       nodes.push({ type: diningType, name: isLowBudget ? '实惠聚餐' : '烤肉/火锅', category: 'dining', duration: 90 })
-      if (constraints.timeWindow >= 5 && !isLowBudget) {
+      const wantsMoreFun = /好玩的|再安排|还想玩|玩点/.test(rawInput)
+      if (wantsMoreFun) {
+        nodes.push({ type: 'arcade', name: '电玩/桌游', category: 'entertainment', duration: 75 })
+      } else if (constraints.timeWindow >= 5 && !isLowBudget) {
         nodes.push({ type: 'night_market', name: isHighBudget ? '清吧/酒吧' : '夜市/酒吧', category: 'night', duration: 60 })
       }
     } else {

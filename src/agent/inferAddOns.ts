@@ -167,7 +167,7 @@ export function inferAddOns(
       if (hasChild || isFamily) {
         items.push(makeServiceNote(node, idx, booking.id))
       }
-      if ((celebration || isFamily) && idx === lastDiningIndex(plan)) {
+      if (celebration && idx === lastDiningIndex(plan)) {
         items.push(makeCake(node, idx, booking.id))
         items.push(makeFlower(node, idx, booking.id))
       }

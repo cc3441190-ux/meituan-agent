@@ -802,18 +802,20 @@
 
 .v4-intent-examples div {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
 }
 
 .v4-intent-examples button {
   border: 1px solid rgba(255, 107, 53, 0.22);
-  border-radius: 999px;
-  padding: 8px 10px;
+  border-radius: 14px;
+  padding: 10px 12px;
   background: rgba(255, 255, 255, 0.62);
   color: var(--v4-orange-dark);
   font-size: 11px;
   font-weight: 700;
+  line-height: 1.45;
+  text-align: left;
   cursor: pointer;
   transition: background 0.15s;
 }

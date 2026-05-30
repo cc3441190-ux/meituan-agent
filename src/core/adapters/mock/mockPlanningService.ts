@@ -2,6 +2,7 @@ import { LocalPlannerAgent } from '../../../agent/LocalPlannerAgent'
 import { requiresSeatCheck, requiresTicketCheck } from '../../../agent/nodeAvailability'
 import type { Constraints, Plan } from '../../../agent/types'
 import { AGENT_TYPE_TO_SCENE_LABEL } from '../../../config/nodeAssets'
+import { isCompetitionDemoInput } from '../../../config/competitionDemo'
 import type { IPlanningService, IPOIService } from '../../ports'
 
 /** Mock 规划 —— 替换为 HttpPlanningService（调 LLM + 工具链） */
@@ -30,6 +31,8 @@ export class MockPlanningService implements IPlanningService {
 
     onLog?.('========== 新规划任务 ==========')
     const constraints = constraintsOverride ?? this.agent.parseIntent(userInput)
+    if (!constraints._userInput) constraints._userInput = userInput
+    const demoFast = isCompetitionDemoInput(userInput)
     const skeleton = await this.agent.planSkeleton(constraints)
 
     for (let i = 0; i < skeleton.nodes.length; i++) {
@@ -46,7 +49,7 @@ export class MockPlanningService implements IPlanningService {
         continue
       }
 
-      await this.agent.delay(600 + Math.random() * 400)
+      await this.agent.delay(demoFast ? 180 : 600 + Math.random() * 400)
       node.status = 'loading'
       onLog?.(`ToolCaller: 填充节点 [${node.name}]…`)
 

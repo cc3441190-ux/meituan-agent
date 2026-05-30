@@ -1,5 +1,10 @@
 import type { Deliverable } from './deliverables'
 import type { Constraints, Inventory, POI, Route } from './types'
+import {
+  getCompetitionPoiId,
+  COMPETITION_GUARANTEED_POI_IDS,
+  matchCompetitionScenario,
+} from '../config/competitionDemo'
 
 let flowerFailedOnce = false
 
@@ -100,6 +105,12 @@ function computeRoute(
 export const MockAPI = {
   async searchPOI(type: string, constraints: Constraints): Promise<POI> {
     const list = POI_DB[type] ?? POI_DB.cafe
+    const scenarioId = matchCompetitionScenario(constraints._userInput ?? '')
+    const demoId = scenarioId ? getCompetitionPoiId(scenarioId, type) : undefined
+    if (demoId) {
+      const fixed = list.find((p) => p.id === demoId)
+      if (fixed) return fixed
+    }
     const excludeIds = parseExcludeIds(constraints._exclude)
     const scored = list
       .filter((p) => !excludeIds.has(p.id))
@@ -136,6 +147,9 @@ export const MockAPI = {
   },
 
   async checkInventory(poiId: string, _timeSlot?: Date): Promise<Inventory> {
+    if (COMPETITION_GUARANTEED_POI_IDS.has(poiId)) {
+      return { available: true, queue: 0 }
+    }
     let hash = 0
     for (let i = 0; i < poiId.length; i++) hash = (hash * 31 + poiId.charCodeAt(i)) | 0
     const bucket = Math.abs(hash) % 100
@@ -146,6 +160,9 @@ export const MockAPI = {
   },
 
   async checkTicketAvailability(poiId: string, _timeSlot?: Date): Promise<Inventory> {
+    if (COMPETITION_GUARANTEED_POI_IDS.has(poiId)) {
+      return { available: true, queue: 0 }
+    }
     let hash = 0
     for (let i = 0; i < poiId.length; i++) hash = (hash * 37 + poiId.charCodeAt(i)) | 0
     const bucket = Math.abs(hash) % 100
